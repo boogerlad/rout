@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.fuck {
+	background-color: red;
+}
+
+.active {
+	background-color: yellow;
+}
+
+.cond {
+	font-size: 80px;
+}
+
+.no {
+	text-decoration: line-through;
+}
+a {
+	display: block;
+}
