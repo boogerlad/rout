@@ -22,55 +22,26 @@ window.setPath = setPath;
 const [authorized, setAuthorized] = createSignal(0);//0 unauthorized, 1 store worker, 2 store owner, 3 god
 function atHome() {return path().length === 0}
 function atCart() {return path() === 'cart/'}
-const atUser = createMemo(() => path().indexOf('user') === 0 ? path().substring(4) : false, false, true);
 const reservationRegex = /^\/((?<id>\d+)\/)?reservation\/$/;
-const atReservations = createMemo(() => {
-	const a = atUser();
-	if(a === false) {
-		return undefined;
-	} else {
-		return a.match(reservationRegex)?.groups;
-	}
-}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id);
+
 
 
 
 const spyRegex = /^\/(?<id>\d+)$/;
-const spy = createMemo(() => {
-	const a = atUser();
-	if(a === false) {
-		return undefined;
-	} else {
-		return a.match(spyRegex)?.groups;
-	}
-}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id);
+
 
 
 const fuckRegex = /^((store\/(?<sid>\d+)(-(?<sslug>[A-Za-z0-9_]+))?\/(?<thing>product|review))|product)\/(?<rest>.*)$/;
-const fuck = createMemo(() => path().match(fuckRegex)?.groups, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.sid === b.sid && a.sslug === b.sslug && a.thing === b.thing && a.rest === b.rest);
+
 const somethingRegex = /^(?<id>\d+)(-(?<slug>[A-Za-z0-9_]+))?(\/edit)?$/;
-const something = createMemo(() => {
-	const f = fuck();
-	if(f === undefined) {
-		return undefined;
-	} else {
-		return f.rest.match(somethingRegex)?.groups;
-	}
-}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id && a.slug === b.slug);
+
 
 
 
 //todo: hemanshu genetics view
-const atStore = createMemo(() => path().indexOf('store/') === 0 ? path().substring(6) : false, false, true)
+
 const atSpecificStoreRegex = /^(?<id>\d+)(-(?<slug>[A-Za-z0-9_]+))?\/(?<what>.+)/;
-const atSpecificStore = createMemo(() => {
-	const w = atStore();
-	if(w === false) {
-		return undefined;
-	} else {
-		return w.match(atSpecificStoreRegex)?.groups;
-	}
-}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id && a.slug === b.slug && a.what === b.what);
+
 
 function Reservations(props) {
 	return <>
@@ -99,8 +70,45 @@ function Product(props) {
 	return <div>{props.id}</div>
 }
 
+render(function() {
+const atUser = createMemo(() => path().indexOf('user') === 0 ? path().substring(4) : false, false, true);
+
+const atReservations = createMemo(() => {
+	const a = atUser();
+	if(a === false) {
+		return undefined;
+	} else {
+		return a.match(reservationRegex)?.groups;
+	}
+}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id);
+const spy = createMemo(() => {
+	const a = atUser();
+	if(a === false) {
+		return undefined;
+	} else {
+		return a.match(spyRegex)?.groups;
+	}
+}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id);
+const fuck = createMemo(() => path().match(fuckRegex)?.groups, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.sid === b.sid && a.sslug === b.sslug && a.thing === b.thing && a.rest === b.rest);
+const something = createMemo(() => {
+	const f = fuck();
+	if(f === undefined) {
+		return undefined;
+	} else {
+		return f.rest.match(somethingRegex)?.groups;
+	}
+}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id && a.slug === b.slug);
+const atStore = createMemo(() => path().indexOf('store/') === 0 ? path().substring(6) : false, false, true);
+const atSpecificStore = createMemo(() => {
+	const w = atStore();
+	if(w === false) {
+		return undefined;
+	} else {
+		return w.match(atSpecificStoreRegex)?.groups;
+	}
+}, undefined, (a, b) => a === b || typeof a === 'object' && typeof b === 'object' && a.id === b.id && a.slug === b.slug && a.what === b.what);
 const gay = createMemo(() => fuck()?.sid === undefined || fuck()?.rest === 'new' || fuck()?.rest === 'edit' ? Null : Store, Null, true);
-render(() => <>
+return <>
 	<a onClick={c} classList={{no: atHome()}} href='/'>home</a>
 	<a onClick={c} classList={{no: atCart()}} href='/cart/'>cart</a>
 	<a onClick={c} classList={{no: atUser() !== false}} href='/user'>my profile</a>
@@ -181,7 +189,7 @@ render(() => <>
 					stores component<br />
 					<a onClick={c} href="1-nova/product/">nova</a>
 					<a onClick={c} href="1-nova/review/">🌟🌟</a>
-					<a onClick={c} href="2/product">ocs</a>
+					<a onClick={c} href="2/product/">ocs</a>
 					<a onClick={c} href="2/review/">🌟</a>
 				</Match>
 				<Match when={atStore() === 'new'}>
@@ -221,4 +229,4 @@ render(() => <>
 			</Switch>
 		</Match>
 	</Switch>
-</>, document.body);
+</>}, document.body);
