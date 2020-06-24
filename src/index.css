@@ -16,7 +16,7 @@ code {
 	background-color: red;
 }
 
-.active {
+.no {
 	background-color: yellow;
 }
 
@@ -24,7 +24,7 @@ code {
 	font-size: 80px;
 }
 
-.no {
+.active {
 	text-decoration: line-through;
 }
 a {
